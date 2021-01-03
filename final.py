@@ -1,7 +1,6 @@
 from crop import crop
 import keras.models
 import numpy as np
-import tensorflow
 
 import keras.preprocessing.image
 from eq_parser import solve
@@ -23,14 +22,15 @@ def predict(img_path: str) -> str:
     return inverted[0]
 
 
-model = keras.models.load_model("photomath.model")  # Model file path
-label_encoder = LabelEncoder()
-label_encoder.classes_ = np.load("pmclasses.npy")  # Lables
+if __name__ == '__main__':
+    model = keras.models.load_model("photomath.model")  # Model file path
+    label_encoder = LabelEncoder()
+    label_encoder.classes_ = np.load("pmclasses.npy")  # Lables
 
-elem = crop('testing.png')  # Input image path
-final_results = []
+    elem = crop('testing.png')  # Input image path
+    final_results = []
 
-for i in range(0, elem):
-    final_results.append(predict(f'{i}.png'))
+    for i in range(0, elem):
+        final_results.append(predict(f'{i}.png'))
 
-solve(final_results)
+    solve(final_results)

@@ -2,8 +2,6 @@ from PIL import Image
 import cv2 as cv
 import numpy as np
 
-global height, width, dim
-
 
 def cropobject(imagearray, left_start: int):
     """
@@ -12,7 +10,6 @@ def cropobject(imagearray, left_start: int):
     crop_left = -1
     for l in range(left_start, width):
         for h in range(height):
-            check = imagearray[h][l][0]
             if imagearray[h][l][0] <= 149:
                 crop_left = l
                 break
@@ -26,7 +23,6 @@ def cropobject(imagearray, left_start: int):
     for r in range(crop_left, width):
         i = 1
         while i < height:
-            check = imagearray[i][r][0]
             if imagearray[i][r][0] > 149:
                 b_pixel = 0
             else:
@@ -95,7 +91,6 @@ def square_paste(img, side, crop_height, crop_width):
 
 
 def crop(img_name):
-
     img = cv.imread(img_name)
     global height, width, dim
     height, width, dim = img.shape
@@ -103,16 +98,16 @@ def crop(img_name):
 
     i = 0
     while i != -1:
-        crop = cropobject(img, i)
-        if crop[3] == -1:
+        croped_img = cropobject(img, i)
+        if croped_img[3] == -1:
             i = -1
             continue
         else:
-            i = crop[3]
+            i = croped_img[3]
 
-        img_crop = img[crop[0]:crop[1], crop[2]:crop[3]]
-        crop_height = crop[1] - crop[0]
-        crop_width = crop[3] - crop[2]
+        img_crop = img[croped_img[0]:croped_img[1], croped_img[2]:croped_img[3]]
+        crop_height = croped_img[1] - croped_img[0]
+        crop_width = croped_img[3] - croped_img[2]
         if crop_height >= crop_width:
             side = crop_height
         else:
@@ -121,7 +116,6 @@ def crop(img_name):
         element.append(img_square)
 
     numbering = 0
-    final_list = []
     for e in element:
         cv.imwrite(f'{numbering}.png', e)
         resize = np.array(Image.open(f'{numbering}.png').resize((32, 32)))
@@ -131,7 +125,7 @@ def crop(img_name):
                     resize[h][w] = [0, 0, 0]
                 else:
                     resize[h][w] = [255, 255, 255]
-        final_img = cv.imwrite(f'{numbering}.png', resize)
+            cv.imwrite(f'{numbering}.png', resize)
         numbering += 1
 
     return numbering
