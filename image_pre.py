@@ -1,3 +1,13 @@
+"""
+The file contains the code that processes the dataset and traines the model
+    - not required to run the main function (final.py)
+
+Requires:       Dataset CSV file path
+
+Outputs:        Model file
+                Dataset classes file
+"""
+
 import keras.preprocessing.image
 import keras.callbacks
 import csv
@@ -11,7 +21,14 @@ from sklearn.preprocessing import OneHotEncoder
 
 def dataset_prep(path: str):
     """
-    
+    Prepares the dataset
+        Reads the CSV file in order to find the image file names and sort labels
+
+    Dataset used: HASYv2
+
+
+    Input: dataset path     (string)
+    Output: saves the dataset labels in a 'pmclasses.npy' file
     """
     images = []
     classes = []
@@ -26,7 +43,7 @@ def dataset_prep(path: str):
                 images.append((row[0], row[2], image))
                 classes.append(row[2])
             i += 1
-    # The dataset is ordered, so it has to be shuffled and split into training and test datasets
+
     random.shuffle(images)
 
     train = images
@@ -53,6 +70,31 @@ def dataset_prep(path: str):
 
 
 def model_build():
+    """
+    Builds a model and saves it as a photomath.model file
+
+    Output:
+        Epoch 1/10
+        4206/4206 - 110s - loss: 1.4008 - accuracy: 0.6544 - val_loss: 0.9312 - val_accuracy: 0.7465
+        Epoch 2/10
+        4206/4206 - 118s - loss: 0.8990 - accuracy: 0.7477 - val_loss: 0.8582 - val_accuracy: 0.7589
+        Epoch 3/10
+        4206/4206 - 110s - loss: 0.7937 - accuracy: 0.7694 - val_loss: 0.8175 - val_accuracy: 0.7697
+        Epoch 4/10
+        4206/4206 - 111s - loss: 0.7272 - accuracy: 0.7845 - val_loss: 0.8205 - val_accuracy: 0.7651
+        Epoch 5/10
+        4206/4206 - 112s - loss: 0.6814 - accuracy: 0.7916 - val_loss: 0.8034 - val_accuracy: 0.7736
+        Epoch 6/10
+        4206/4206 - 107s - loss: 0.6390 - accuracy: 0.8018 - val_loss: 0.8155 - val_accuracy: 0.7629
+        Epoch 7/10
+        4206/4206 - 105s - loss: 0.6083 - accuracy: 0.8079 - val_loss: 0.8410 - val_accuracy: 0.7660
+        Epoch 8/10
+        4206/4206 - 106s - loss: 0.5819 - accuracy: 0.8150 - val_loss: 0.8429 - val_accuracy: 0.7682
+        Epoch 9/10
+        4206/4206 - 109s - loss: 0.5617 - accuracy: 0.8194 - val_loss: 0.8529 - val_accuracy: 0.7690
+        Epoch 10/10
+        4206/4206 - 111s - loss: 0.5425 - accuracy: 0.8231 - val_loss: 0.8967 - val_accuracy: 0.7614
+    """
     from keras.models import Sequential
     from keras.layers import Dense, Dropout, Flatten
     from keras.layers import MaxPooling2D, Conv2D

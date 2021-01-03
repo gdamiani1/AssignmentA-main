@@ -1,16 +1,26 @@
+"""
+Processes the image and gets it ready for prediction
+"""
+
 from PIL import Image
 import cv2 as cv
 import numpy as np
 
 
-def cropobject(imagearray, left_start: int):
+def cropobject(image_array, left_start: int):
     """
-    Outputs the coordinates of the edges of an element from the initial image.
+    Outputs the coordinates of the edges of an element from the initial image
+    by finding the first and last pixel that contains value lower than 149 both vertically and horizontally
+
+    Input:      Image as a numpy array
+                Starting position for the search    (O at start, takes every right coordinate of
+                                                    the previous crop otherwise)
+    Output:     Coordinates of the edges of an element
     """
     crop_left = -1
     for l in range(left_start, width):
         for h in range(height):
-            if imagearray[h][l][0] <= 149:
+            if image_array[h][l][0] <= 149:
                 crop_left = l
                 break
             if l == width - 1:
@@ -23,7 +33,7 @@ def cropobject(imagearray, left_start: int):
     for r in range(crop_left, width):
         i = 1
         while i < height:
-            if imagearray[i][r][0] > 149:
+            if image_array[i][r][0] > 149:
                 b_pixel = 0
             else:
                 b_pixel = 1
@@ -38,7 +48,7 @@ def cropobject(imagearray, left_start: int):
     crop_top = -1
     for t in range(0, height):
         for w in range(crop_left, crop_right):
-            if imagearray[t][w][0] <= 149:
+            if image_array[t][w][0] <= 149:
                 crop_top = t
                 break
             if t == height:
@@ -47,11 +57,10 @@ def cropobject(imagearray, left_start: int):
             break
 
     crop_bottom = -1
-    b_pixel = 0
     for b in range(crop_top, height):
         i = 1
         while i < crop_right:
-            if imagearray[b][i][0] > 149:
+            if image_array[b][i][0] > 149:
                 b_pixel = 0
             else:
                 b_pixel = 1
@@ -69,6 +78,11 @@ def cropobject(imagearray, left_start: int):
 def square_paste(img, side, crop_height, crop_width):
     """
     Pastes the cropped image of an element into a square array
+
+    Input:      Numpy array of a single element
+                Length of the longest side
+                Height of the cropped image         (in pixels)
+                Width of the cropped image          (in pixels)
     """
     square = np.full((side, side, 3), 255)
     if side == crop_height:
@@ -90,7 +104,15 @@ def square_paste(img, side, crop_height, crop_width):
     return square
 
 
-def crop(img_name):
+def crop(img_name: str):
+    """
+    Final function of the image processor.
+    Crops each element of the image, converts it into a square 32*32 image and saves it in a png file
+    File naming: element_{number of the element}.png
+
+    Input:     Path of the initial image        (string)
+    Output:    Number of elements in the image  (int)
+    """
     img = cv.imread(img_name)
     global height, width, dim
     height, width, dim = img.shape
@@ -117,15 +139,15 @@ def crop(img_name):
 
     numbering = 0
     for e in element:
-        cv.imwrite(f'{numbering}.png', e)
-        resize = np.array(Image.open(f'{numbering}.png').resize((32, 32)))
+        cv.imwrite(f'element_{numbering}.png', e)
+        resize = np.array(Image.open(f'element_{numbering}.png').resize((32, 32)))
         for h in range(0, 32):
             for w in range(0, 32):
                 if resize[h][w][0] <= 200:
                     resize[h][w] = [0, 0, 0]
                 else:
                     resize[h][w] = [255, 255, 255]
-            cv.imwrite(f'{numbering}.png', resize)
+            cv.imwrite(f'element_{numbering}.png', resize)
         numbering += 1
 
     return numbering
