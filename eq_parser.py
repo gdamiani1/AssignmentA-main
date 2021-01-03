@@ -42,7 +42,7 @@ def string_separator(equation):
                 or elem == 'j' or elem == ']' or elem == '\\rrbracket':
             eltype.append(-6)
             intcheck = False
-    print(eltype)
+
     return eltype
 
 
