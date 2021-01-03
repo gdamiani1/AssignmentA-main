@@ -44,7 +44,7 @@ def predict(img_path: str) -> str:
 
 
 # if __name__ == '__main__':
-model = keras.models.load_model("photomath.model")      # Model file path
+model = keras.models.load_model("pm.model")      # Model file path
 label_encoder = LabelEncoder()
 label_encoder.classes_ = np.load("pmclasses.npy")       # Dataset Lables
 

@@ -127,4 +127,4 @@ print('data loaded')
 
 model = model_build()
 
-model.save("photomath.model")
+model.save("pm.model")
