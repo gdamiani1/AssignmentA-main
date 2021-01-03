@@ -38,17 +38,17 @@ def predict(img_path: str) -> str:
 
     # The code below prints the prediction of the model and the confidence of the predictions
 
-    # print("Prediction %s      Confidence: %.2f" % (prediction[0], np.max(prediction)))
+    # print("Prediction %s      Prediction confidence: %.2f" % (prediction[0], np.max(prediction)))
 
     return prediction[0]
 
 
 # if __name__ == '__main__':
-model = keras.models.load_model("pm.model")      # Model file path
+model = keras.models.load_model("pm.model")                 # Model file path
 label_encoder = LabelEncoder()
-label_encoder.classes_ = np.load("pmclasses.npy")       # Dataset Lables
+label_encoder.classes_ = np.load("pmclasses.npy")           # Dataset Lables
 
-elem = crop('testing.png')                              # Input image path
+elem = crop('testing.png')                                  # Input image path
 final_results = []
 
 for i in range(0, elem):
